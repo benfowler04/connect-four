@@ -41,7 +41,7 @@ class Board
     end
 
     def winning_move?(column, row)
-        winning_column?(column) || winning_row?(row) || winning_diagonal?(column, row)
+        winning_column?(column) || winning_row?(row) || winning_diagonal?
     end
 
     def winning_column?(column)
@@ -69,6 +69,25 @@ class Board
         return false
     end
 
-    def winning_diagonal?(column, row)
+    def winning_diagonal?
+        possible_wins = []
+        for column in 0..3
+            for row in 0..2
+                diagonal_contents = [@current_state[column][row]]
+                diagonal_contents.push(@current_state[column + 1][row + 1])
+                diagonal_contents.push(@current_state[column + 2][row + 2])
+                diagonal_contents.push(@current_state[column + 3][row + 3])
+                possible_wins.push(diagonal_contents.uniq.length) unless diagonal_contents.count("o") > 3
+            end
+            for row in 3..5
+                diagonal_contents = [@current_state[column][row]]
+                diagonal_contents.push(@current_state[column + 1][row - 1])
+                diagonal_contents.push(@current_state[column + 2][row - 2])
+                diagonal_contents.push(@current_state[column + 3][row - 3])
+                possible_wins.push(diagonal_contents.uniq.length) unless diagonal_contents.count("o") > 3
+            end
+        end
+        return true if possible_wins.include?(1)
+        return false
     end
 end
